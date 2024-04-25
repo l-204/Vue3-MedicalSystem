@@ -170,7 +170,6 @@ let validateCheckPassword = (rule, value, callback) => {
   }
 };
 const router = useRouter();
-const store = useStore();
 const imgCode = ref("");
 const loading = ref(false);
 
@@ -215,7 +214,6 @@ const handleLogin = async (loginFormRef) => {
       // 处理时间格式
       formatTime([res.userInfo]);
       // 保存用户信息到本地
-      store.setUser(res.userInfo)
       const userInfo = JSON.stringify(res.userInfo);
       localStorage.setItem("userInfo", userInfo);
       loading.value = !loading.value;

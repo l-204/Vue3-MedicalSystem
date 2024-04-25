@@ -244,19 +244,18 @@ const handleUpdate = async (formRef) => {
     const results = await formRef.validate();
     if (results) {
       // 修改头像
-      uploadImage()
+      Object.assign(form,await uploadImage(form))
       // 使用 await 等待 EditUser 函数的结果
-      const res = await EditUser(form);
-      formatTime([res]);
+      EditUser(form).then(res => {
+        formatTime([res]);
       delete res.password;
-      store.setUser(res);
       localStorage.setItem("userInfo", JSON.stringify(res));
+      store.setUser(res);
       dialogFormVisible.value = false;
       ElMessage.success("修改成功");
-      
+      })
     } else {
       ElMessage.error("修改失败");
-      console.log("error submit!", results);
     }
   } catch (error) {
     console.error(error);
@@ -266,7 +265,6 @@ const handleUpdate = async (formRef) => {
 const handleReset = (formRef) => {
   if (!formRef) return;
   formRef.resetFields();
-  Object.assign(form, {...userInfo.value,avatar:""});
 };
 // 处理文件选择事件
 const handleFileChange = (event) => {
@@ -278,24 +276,18 @@ const handleFileChange = (event) => {
 };
 
 // 上传图片
-const uploadImage = () => {
+const uploadImage = async (form) => {
   // console.log(form.value.avatar)
   // 检查是否选择了图片文件
   if (imageFile.value && imageFile.value !== '') {
     const formData = new FormData();
     formData.append("file", imageFile.value);
     // 更新数据库头像
-    uploadAvatar(user_id, formData)
-      .then(res => {
-        form.avatar = res.data.img_url.img_url;
-        setAvatar(user_id, form.avatar).then(res => {
-          console.log(res)
-        });
-      })
-      .catch(err => {
-        console.error("上传失败", err);
-      });
+    const res = await uploadAvatar(user_id, formData)
+    form.avatar = res.data.img_url.img_url;
+    setAvatar(user_id, form.avatar)
   } 
+  return form
 };
 </script>
 

@@ -111,28 +111,29 @@ import { onMounted, computed, ref } from "vue";
 import { activityItem } from '../data/itemList'
 
 const store = useStore();
-    const isLoading = computed(() => store.isLoading);
-    // 进入页面时设置加载状态为 true
-    store.setLoading(true);
-    const userInfo = ref({});
-    const images = ref([
-      new URL("../assets/1.jpg", import.meta.url).href,
-      new URL("../assets/2.webp", import.meta.url).href,
-      new URL("../assets/3.png", import.meta.url).href,
-      new URL("../assets/4.jpg", import.meta.url).href,
-    ]);
-    const activities = activityItem;
-    const getUser = () => {
-      try {
-        userInfo.value = JSON.parse(localStorage.getItem("userInfo"));
-      } catch (error) {
-        console.error(error);
-      } finally {
-        // 页面加载完成后设置加载状态为 false
-        store.setLoading(false);
-      }
-    };
-    onMounted(getUser);
+const isLoading = computed(() => store.isLoading);
+// 进入页面时设置加载状态为 true
+store.setLoading(true);
+const userInfo = ref({});
+const images = ref([
+  new URL("../assets/1.jpg", import.meta.url).href,
+  new URL("../assets/2.webp", import.meta.url).href,
+  new URL("../assets/3.png", import.meta.url).href,
+  new URL("../assets/4.jpg", import.meta.url).href,
+]);
+const activities = activityItem;
+const getUser = () => {
+  try {
+    userInfo.value = JSON.parse(localStorage.getItem("userInfo"));
+    store.setUser(userInfo.value)
+  } catch (error) {
+    console.error(error);
+  } finally {
+    // 页面加载完成后设置加载状态为 false
+    store.setLoading(false);
+  }
+};
+onMounted(getUser);
 </script>
 
 <style>

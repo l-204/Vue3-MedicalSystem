@@ -104,7 +104,6 @@ const newEmailList = emailList.value.map(email => {
 });
   // 将原来的emailList修改为新的emailList
   emailList.value = newEmailList
-  console.log(emailList.value)
   })
         
       })
