@@ -8,7 +8,6 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     BarChart: typeof import('./src/components/BarChart.vue')['default']
-    Cache: typeof import('./src/components/cache.vue')['default']
     ElAside: typeof import('element-plus/es')['ElAside']
     ElAvatar: typeof import('element-plus/es')['ElAvatar']
     ElBadge: typeof import('element-plus/es')['ElBadge']
@@ -57,9 +56,6 @@ declare module 'vue' {
     ElTimeline: typeof import('element-plus/es')['ElTimeline']
     ElTimelineItem: typeof import('element-plus/es')['ElTimelineItem']
     ElTooltip: typeof import('element-plus/es')['ElTooltip']
-    ElUpload: typeof import('element-plus/es')['ElUpload']
-    EmailBox: typeof import('./src/components/EmailBox.vue')['default']
-    EmailContent: typeof import('./src/components/EmailContent.vue')['default']
     LineChart: typeof import('./src/components/LineChart.vue')['default']
     MenuPage: typeof import('./src/components/MenuPage.vue')['default']
     MessageBell: typeof import('./src/components/MessageBell.vue')['default']
