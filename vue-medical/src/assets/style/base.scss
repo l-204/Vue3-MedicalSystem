@@ -1,0 +1,26 @@
+:root {
+    --bMainBgColor:#ecf5ff;
+    --bPageBgColor: #fff;
+    --bTextColor: #000;
+    --bBgColor: var(--el-bg-color);
+    --bBorderColor: var(--el-input-border-color);
+    --bDialogBgColor: var(--el-dialog-bg-color);
+  
+    // single page use
+    --roleHeaderBgColor: #f1f1f1;
+    --selectRowBgColor: #e8f4ff;
+  }
+  
+  html.dark {
+    --bMainBgColor:#0a0a0a;
+    --bPageBgColor: #0a0a0a;
+    --bTextColor: #fff;
+    // --el-bg-color-page: #0a0a0a;
+    // --el-bg-color: #141414;
+  
+    // single page use
+    --roleHeaderBgColor: #0e0e0e;
+    --selectRowBgColor: #414243;
+  }
+  
+  
