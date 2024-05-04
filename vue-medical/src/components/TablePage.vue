@@ -134,7 +134,7 @@
     <el-table
       :data="displayedData"
       border
-      style="margin-top: 20px; width: 100%"
+      style="margin-top: 20px; width: 100%;font-size: clamp(0.7rem, 1.5vw, 0.9rem)"
       height="67vh"
     >
       <el-table-column type="index" label="" align="center"></el-table-column>

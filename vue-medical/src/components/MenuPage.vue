@@ -218,8 +218,7 @@ const menuList = menuItem
     // 弹出帮助
     const help = () => {
   ElMessageBox.alert(brief, '简介', {
-    // if you want to disable its autofocus
-    // autofocus: false,
+    dangerouslyUseHTMLString: true,
     confirmButtonText: '确定',
   })
 }

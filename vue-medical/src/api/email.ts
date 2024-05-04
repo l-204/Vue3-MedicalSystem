@@ -1,16 +1,37 @@
 import request from '../utils/request'
 
-export function getEmail(){
+export function getAllEmail(){
     return request({
         url: '/api/all/select/email',
         method: 'get'
     })
 }
 
-export function getEmailUser( min_id: number, max_id: number){
+export function getUserEmail(){
     return request({
         url: '/api/email/user',
-        method: 'post',
-        data: { min_id, max_id }
+        method: 'get',
+    })
+}
+
+export function setEmail(formData: object){
+    return request({
+        url:'/api/all/insert/email',
+        method:'post',
+        data: formData,
+    })
+}
+
+export function updateEmail(){
+    return request({
+        url:'/api/all/update/email',
+        method:'',
+    })
+}
+
+export function deleteEmail(){
+    return request({
+        url:'/api/all/delete/email',
+        method:'',
     })
 }

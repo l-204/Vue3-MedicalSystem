@@ -15,6 +15,13 @@ export function GetUser(listData: any) {
     })
 }
 
+export function GetUserIdList() {
+    return request({
+        url: '/api/users/id',//此处为自己请求地址
+        method: 'get',//请求类型
+    })
+}
+
 export function GetAvatar(){
     return request({
         url:'/api/files/avatar',

@@ -92,6 +92,17 @@ app.post('/api/users/update', (req, res) => {
     })
 })
 
+// 用户接口
+app.get('/api/users/id', (req, res) => {
+    // 执行查询语句
+    const selectquery = `SELECT user_id FROM users`
+    pool.query(selectquery, (err, results) => {
+        if (err) throw err;
+        const idList = results.map((item => item.user_id))
+        res.status(200).json(idList)
+    })
+});
+
 // 通用查询接口（单表）
 app.get('/api/all/select/:tableName', (req, res) => {
     let tableName = req.params.tableName;
@@ -169,6 +180,7 @@ app.delete('/api/all/delete/:id/:tableName', (req, res) => {
 app.post('/api/all/insert/:tableName', (req, res) => {
     const tableName = req.params.tableName
     const data = req.body;
+    console.log(data)
 
     const selectQuery = `SELECT * FROM ${tableName}`
     let insertQuery = ``;
@@ -201,13 +213,13 @@ app.post('/api/all/insert/:tableName', (req, res) => {
     }
     // 护理接口
     else if (tableName == 'nursing') {
-        insertQuery = `INSERT INTO ${tableName}(nurse_id, nurse_name, gender, age, phone_number, title, patient_name, nursing_content, created_at, last_modified_at) VALUES('${data.nurse_id}', '${data.nurse_name}','${data.gender}','${data.age}','${data.phone_number}','${data.title}','${data.patient_name}','${data.nursing_content}',NOW(), NOW())`;
+        insertQuery = `INSERT INTO ${tableName}(nurse_name, gender, age, phone_number, title, patient_name, nursing_content, created_at, last_modified_at) VALUES('${data.nurse_name}','${data.gender}','${data.age}','${data.phone_number}','${data.title}','${data.patient_name}','${data.nursing_content}',NOW(), NOW())`;
     }
 
 
     // 邮箱接口
     else if (tableName == 'email') {
-        insertQuery = `INSERT INTO ${tableName}( from, from_avatar, to, to_avatar, topic, content, attachment, state, send_at, receive_at) VALUES( '${data.from}','${data.from_avatar}','${data.to}','${data.to_avatar}','${data.topic}','${data.content}','${data.attachment}','${data.state}',NOW(), NOW())`;
+        insertQuery = `INSERT INTO ${tableName}(from_id, to_id, topic, content, attachment, state, send_at, receive_at) VALUES(${data.from_id},${data.to_id},'${data.topic}','${data.content}','${data.attachment}','${data.state}',NOW(), NOW())`;
     }
     // 其他接口
     else {
@@ -327,17 +339,38 @@ app.post(`/api/users/avatar`,(req,res) => {
 })
 
 // 邮箱
-app.post(`/api/email/user`,(req,res) => {
+app.get(`/api/email/user`,(req,res) => {
 
-    const min = req.body.min_id
-    const max = req.body.max_id
+    const selectAllEmail = `SELECT * FROM email`
 
-    // 提取邮件所有user_id范围内的所有user信息
-    const selectQuery = `SELECT user_id, username, avatar, email FROM users WHERE user_id BETWEEN ${ min } AND ${ max }`;
-
-    pool.query(selectQuery,(err, results) => {
+    pool.query(selectAllEmail,(err, results) => {
         if(err) throw err
-        res.status(200).json(results)
+        const emailList = results
+        // 提取所有邮件的用户id，统计邮件所有用户id的范围
+        let allId = emailList.reduce((acc, email) => {
+            acc.push(email.from_id);
+            acc.push(email.to_id);
+            return acc;
+        }, []);
+        // 获取id范围后将作为post参数，用于只发送一次请求的情况下获取所有邮件的用户信息
+        const min_id = Math.min(...allId);
+        const max_id = Math.max(...allId);
+
+        // 提取邮件所有user_id范围内的所有user信息
+        const selectUserEmail = `SELECT user_id, username, avatar, email FROM users WHERE user_id BETWEEN ${ min_id } AND ${ max_id }`;
+
+        pool.query(selectUserEmail,(err, results) => {
+            if(err) throw err
+            const userList = results
+
+            // 创建一个新的 emailList 数组，其中每个邮件对象都包含了from_id和to对应的username, avatar, email
+            const newEmailList = emailList.map(email => {
+                const { username: from_name, avatar: from_avatar, email: from_email } = userList.find(user => user.user_id === email.from_id) || {};
+                const { username: to_name, avatar: to_avatar, email: to_email } = userList.find(user => user.user_id === email.to_id) || {};
+                return { ...email, from_name, from_avatar, from_email, to_name, to_avatar, to_email };
+            });
+            res.status(200).json(newEmailList)
+        })
     })
 })
 

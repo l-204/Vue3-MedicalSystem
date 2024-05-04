@@ -10,13 +10,13 @@
           <el-row :gutter="20">
             <!-- 个人信息 -->
             <el-col :md="12" :lg="10" :xl="10">
-              <el-card>
+              <el-card body-style="height:100%;display:flex;flex-direction:column;">
                 <!-- 上部分 -->
-                <div class="user">
+                <div class="user" style="flex-grow: 1;">
                   <el-avatar
-                    :size="150"
+                    :size="isMobile?100:150"
                     :src="userInfo.avatar"
-                    style="margin: auto; font-size: 2em"
+                    style="margin: auto;"
                     >{{ userInfo.username }}</el-avatar
                   >
                   <div class="userinfo">
@@ -28,11 +28,11 @@
                   </div>
                 </div>
                 <!-- 下部分 -->
-                <template #footer>
+                <div class="footer">
                   <el-icon><Link /></el-icon> 上次登录时间：{{
                     userInfo.last_login_at
                   }}
-                </template>
+                </div>
               </el-card>
             </el-col>
             <!-- 常用功能 -->
@@ -112,6 +112,7 @@ import { activityItem } from '../data/itemList'
 
 const store = useStore();
 const isLoading = computed(() => store.isLoading);
+const isMobile = computed(() => store.isMobile);
 // 进入页面时设置加载状态为 true
 store.setLoading(true);
 const userInfo = ref({});
@@ -151,13 +152,19 @@ onMounted(getUser);
 
 .HomeContent .user {
   display: flex;
-  padding-top: 40px;
+  /* padding-top: 40px; */
 }
 
 .HomeContent .user .userinfo {
   text-align: left;
   margin: auto;
-  font-size: 24px;
+  font-size: clamp(1rem, 4vw, 1.5rem);
+}
+
+.HomeContent .footer{
+  border-top: 1px solid var(--el-border-color);
+  padding: 15px 0;
+  font-size: clamp(0.7rem, 3vw, 1rem);
 }
 
 .HomeContent .el-progress {
