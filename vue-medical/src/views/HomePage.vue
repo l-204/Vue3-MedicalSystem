@@ -12,33 +12,31 @@
             <el-col :md="12" :lg="10" :xl="10">
               <el-card body-style="height:100%;display:flex;flex-direction:column;">
                 <!-- 上部分 -->
-                <div class="user" style="flex-grow: 1;">
-                  <el-avatar
-                    :size="isMobile?100:150"
-                    :src="userInfo.avatar"
-                    style="margin: auto;"
-                    >{{ userInfo.username }}</el-avatar
-                  >
+                <div class="user" style="flex-grow: 1">
+                  <el-avatar :size="isMobile ? 100 : 150" :src="userInfo.avatar"
+                    style="margin: auto; font-size: 2rem">{{ userInfo.username }}</el-avatar>
                   <div class="userinfo">
-                    <el-icon><User /></el-icon> &nbsp;{{ userInfo.username }}
+                    <el-icon>
+                      <User />
+                    </el-icon> &nbsp;{{ userInfo.username }}
                     <br /><br />
-                    <el-icon><CreditCard /></el-icon> &nbsp;{{
-                      userInfo.identity
-                    }}
+                    <el-icon>
+                      <CreditCard />
+                    </el-icon> &nbsp;{{ userInfo.identity }}
                   </div>
                 </div>
                 <!-- 下部分 -->
                 <div class="footer">
-                  <el-icon><Link /></el-icon> 上次登录时间：{{
-                    userInfo.last_login_at
-                  }}
+                  <el-icon>
+                    <Link />
+                  </el-icon> 上次登录时间：{{ userInfo.last_login_at }}
                 </div>
               </el-card>
             </el-col>
             <!-- 常用功能 -->
             <el-col :md="12" :lg="14" :xl="14">
               <!-- 折线图 -->
-              <el-card>
+              <el-card body-style="height:100%">
                 <LineChart />
               </el-card>
             </el-col>
@@ -48,17 +46,9 @@
             <!-- 轮播图 -->
             <el-col :md="10" :lg="10" :xl="10">
               <el-card body-style="padding: 0;height: 100%;">
-                <el-carousel
-                  trigger="click"
-                  height=""
-                  autoplay
-                  :interval="5000"
-                  arrow="always"
-                >
-                  <el-carousel-item
-                    v-for="(item, index) in images"
-                    :key="index"
-                  >
+                <el-carousel trigger="click" height="100%" style="height: 100%" autoplay :interval="3000"
+                  arrow="always">
+                  <el-carousel-item v-for="(item, index) in images" style="height: 100%" :key="index">
                     <img :src="item" width="100%" height="100%" alt="" />
                   </el-carousel-item>
                 </el-carousel>
@@ -66,32 +56,35 @@
             </el-col>
             <!-- 开发进度 -->
             <el-col :sm="12" :md="7" :lg="7" :xl="7">
-              <el-card>
+              <el-card body-style="flex-grow:1;" style="display: flex; flex-direction: column">
                 <template #header>
-                  <el-icon><DataLine /></el-icon> 开发进度
+                  <el-icon>
+                    <DataLine />
+                  </el-icon> 开发进度
                 </template>
-                <el-icon><House /></el-icon> 首页模块
-                <el-progress :percentage="100" status="success"> </el-progress>
-                <el-icon><EditPen /></el-icon> 管理模块
-                <el-progress :percentage="100" status="success"> </el-progress>
-                <el-icon><More /></el-icon> 其他模块
-                <el-progress :percentage="100" status="success"> </el-progress>
+                <div style="height: 100%; display: flex; flex-direction: column">
+                  <div style="flex-grow: 1" v-for="item in progressItem" :key="item.id">
+                    <div>
+                      <el-icon>
+                        <component :is="item.icon" />
+                      </el-icon> {{ item.title }}
+                    </div>
+                    <el-progress :percentage="100" status="success"></el-progress>
+                  </div>
+                </div>
               </el-card>
             </el-col>
             <!-- 开发日志 -->
             <el-col :sm="12" :md="7" :lg="7" :xl="7">
-              <el-card>
+              <el-card body-style="flex-grow:1;overflow:auto" style="display: flex; flex-direction: column">
                 <template #header>
-                  <el-icon><Memo /></el-icon> 开发日志
+                  <el-icon>
+                    <Memo />
+                  </el-icon> 开发日志
                 </template>
                 <el-timeline>
-                  <el-timeline-item
-                    v-for="(activity, index) in activities"
-                    :key="index"
-                    :timestamp="activity.timestamp"
-                    :type="activity.type"
-                    :icon="activity.icon"
-                    >{{ activity.content }}
+                  <el-timeline-item v-for="(activity, index) in activities" :key="index" :timestamp="activity.timestamp"
+                    :type="activity.type" :icon="activity.icon">{{ activity.content }}
                   </el-timeline-item>
                 </el-timeline>
               </el-card>
@@ -105,10 +98,10 @@
 
 <script setup>
 import MenuPage from "../components/MenuPage.vue";
-import LineChart from "../components/LineChart.vue";
+import LineChart from "../components/echart/LineChart.vue";
 import { useStore } from "../store/index";
 import { onMounted, computed, ref } from "vue";
-import { activityItem } from '../data/itemList'
+import { activityItem, progressItem } from "../data/itemList";
 
 const store = useStore();
 const isLoading = computed(() => store.isLoading);
@@ -126,7 +119,7 @@ const activities = activityItem;
 const getUser = () => {
   try {
     userInfo.value = JSON.parse(localStorage.getItem("userInfo"));
-    store.setUser(userInfo.value)
+    store.setUser(userInfo.value);
   } catch (error) {
     console.error(error);
   } finally {
@@ -145,9 +138,9 @@ onMounted(getUser);
 
 .HomeContent .el-card {
   border-radius: 10px;
-  height: 300px;
-  margin-bottom: 40px;
+  height: 40vh;
   box-shadow: 0 0 4px 2px rgba(0, 0, 0, 0.1);
+  margin-bottom: 40px;
 }
 
 .HomeContent .user {
@@ -161,15 +154,9 @@ onMounted(getUser);
   font-size: clamp(1rem, 4vw, 1.5rem);
 }
 
-.HomeContent .footer{
+.HomeContent .footer {
   border-top: 1px solid var(--el-border-color);
   padding: 15px 0;
   font-size: clamp(0.7rem, 3vw, 1rem);
 }
-
-.HomeContent .el-progress {
-  margin-bottom: 30px;
-  width: auto;
-}
 </style>
-../data/itemList

@@ -1,35 +1,14 @@
 <template>
   <div>
-    <el-button
-      id="tableButton"
-      icon="CirclePlus"
-      @click="openAddDialog()"
-      size="large"
-      v-if="identity == '管理员'"
-      :circle="isMobile ? true : false"
-      >{{ isMobile ? "" : "添加" }}
+    <el-button id="tableButton" icon="CirclePlus" @click="openAddDialog()" size="large" v-if="identity == '管理员'"
+      :circle="isMobile ? true : false">{{ isMobile ? "" : "添加" }}
     </el-button>
 
     <div style="float: right; margin-bottom: 15px">
-      <el-input
-        v-model="searchword"
-        placeholder="请输入关键字查询"
-        size="large"
-        class="input-with-select"
-      >
+      <el-input v-model="searchword" placeholder="请输入关键字查询" size="large" class="input-with-select">
         <template #prepend>
-          <el-select
-            v-model="keywords"
-            placeholder="请选择"
-            size="large"
-            style="width: 120px"
-          >
-            <el-option
-              v-for="(item, index) in formList"
-              :key="index"
-              :label="item.label"
-              :value="item.key"
-            ></el-option>
+          <el-select v-model="keywords" placeholder="请选择" size="large" style="width: 120px">
+            <el-option v-for="(item, index) in formList" :key="index" :label="item.label" :value="item.key"></el-option>
           </el-select>
         </template>
         <template #append>
@@ -39,83 +18,38 @@
       </el-input>
     </div>
 
-    <el-dialog
-      :title="isAdd ? `添加${title}` : isEdit ? `编辑${title}` : ''"
-      v-model="dialogFormVisible"
-    >
-      <el-form
-        :model="form"
-        :rules="ruleList"
-        ref="formRef"
-        label-width="120px"
-        style="max-width: 600px; margin: auto"
-      >
-        <el-form-item
-          v-for="item in formList"
-          :prop="item.key"
-          :label="item.label"
-          :key="item.key"
-        >
+    <el-dialog :title="isAdd ? `添加${title}` : isEdit ? `编辑${title}` : ''" v-model="dialogFormVisible">
+      <el-form :model="form" :rules="ruleList" ref="formRef" label-width="120px" style="max-width: 600px; margin: auto">
+        <el-form-item v-for="item in formList" :prop="item.key" :label="item.label" :key="item.key">
           <template v-if="item.type === 'input'">
-            <el-input
-              v-model="form[item.key]"
-              :placeholder="'请输入' + item.label"
-            ></el-input>
+            <el-input v-model="form[item.key]" :placeholder="'请输入' + item.label"></el-input>
           </template>
           <template v-else-if="item.type === 'number'">
-            <el-input
-              v-model.number="form[item.key]"
-              :placeholder="'请输入' + item.label"
-            ></el-input>
+            <el-input v-model.number="form[item.key]" :placeholder="'请输入' + item.label"></el-input>
           </template>
           <template v-else-if="item.type === 'radio'">
             <el-radio-group v-model="form[item.key]">
-              <el-radio
-                v-for="(option, index) in item.options"
-                :key="index"
-                :value="option"
-                >{{ option }}</el-radio
-              >
+              <el-radio v-for="(option, index) in item.options" :key="index" :value="option">{{ option }}</el-radio>
             </el-radio-group>
           </template>
           <template v-else-if="item.type === 'checkbox'">
             <el-checkbox-group v-model="form[item.key]">
-              <el-checkbox
-                v-for="(option, index) in item.options"
-                :key="index"
-                :label="option"
-                >{{ option }}</el-checkbox
-              >
+              <el-checkbox v-for="(option, index) in item.options" :key="index" :label="option">{{ option
+                }}</el-checkbox>
             </el-checkbox-group>
           </template>
           <template v-else-if="item.type === 'select'">
-            <el-select
-              v-model="form[item.key]"
-              :placeholder="'请选择' + item.label"
-            >
-              <el-option
-                v-for="(option, index) in item.options"
-                :key="index"
-                :label="option"
-                :value="option"
-              ></el-option>
+            <el-select v-model="form[item.key]" :placeholder="'请选择' + item.label">
+              <el-option v-for="(option, index) in item.options" :key="index" :label="option"
+                :value="option"></el-option>
             </el-select>
           </template>
           <template v-else-if="item.type === 'date'">
-            <el-date-picker
-              v-model="form[item.key]"
-              type="date"
-              :placeholder="'请选择' + item.label"
-            ></el-date-picker>
+            <el-date-picker v-model="form[item.key]" type="date" :placeholder="'请选择' + item.label"></el-date-picker>
           </template>
           <template v-else-if="item.type === 'textarea'">
-            <el-input
-              autosize
-              type="textarea"
-              v-model="form[item.key]"
-              :rows="4"
-              :placeholder="'请输入' + item.label"
-            ></el-input>
+            <el-input autosize type="textarea" v-model="form[item.key]" :rows="4"
+              :placeholder="'请输入' + item.label"></el-input>
           </template>
           <template v-else-if="item.type === 'switch'">
             <el-switch v-model="form[item.key]"></el-switch>
@@ -125,67 +59,29 @@
 
       <div slot="footer" class="dialog-footer" style="text-align: center">
         <el-button @click="handleReset(formRef)">重 置</el-button>
-        <el-button type="primary" @click="handleSubmit(formRef)"
-          >确 定</el-button
-        >
+        <el-button type="primary" @click="handleSubmit(formRef)">确 定</el-button>
       </div>
     </el-dialog>
 
-    <el-table
-      :data="displayedData"
-      border
-      style="margin-top: 20px; width: 100%;font-size: clamp(0.7rem, 1.5vw, 0.9rem)"
-      height="67vh"
-    >
+    <el-table :data="displayedData" border style="margin-top: 20px; width: 100%;font-size: clamp(0.7rem, 1.5vw, 0.9rem)"
+      height="67vh">
       <el-table-column type="index" label="" align="center"></el-table-column>
 
-      <el-table-column
-        v-for="(item, index) in formList"
-        :key="index"
-        :prop="item.key"
-        align="center"
-        :label="item.label"
-      >
+      <el-table-column v-for="(item, index) in formList" :key="index" :prop="item.key" align="center"
+        :label="item.label">
       </el-table-column>
 
-      <el-table-column
-        fixed="right"
-        label="操作"
-        width="180px"
-        align="center"
-        v-if="identity == '管理员'"
-      >
+      <el-table-column fixed="right" label="操作" width="180px" align="center" v-if="identity == '管理员'">
         <template v-slot="scope">
-          &emsp;<el-button
-            link
-            type="primary"
-            icon="Edit"
-            @click="openEditDialog(scope.row)"
-            >编辑</el-button
-          >
-          &emsp;<el-button
-            link
-            type="danger"
-            icon="Delete"
-            @click="handleDelete(scope.row)"
-            >删除</el-button
-          >
+          &emsp;<el-button link type="primary" icon="Edit" @click="openEditDialog(scope.row)">编辑</el-button>
+          &emsp;<el-button link type="danger" icon="Delete" @click="handleDelete(scope.row)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
 
-    <el-pagination
-      style="margin: 20px 0"
-      @size-change="handleSizeChange"
-      @current-change="handleCurrentChange"
-      :current-page="currentPage"
-      :page-sizes="[10, 20, 40, 50, 100]"
-      :page-size="pageSize"
-      :layout="
-        isMobile ? 'pager' : '->,total, sizes, prev, pager, next, jumper'
-      "
-      :total="total"
-    >
+    <el-pagination style="margin: 20px 0" @size-change="handleSizeChange" @current-change="handleCurrentChange"
+      :current-page="currentPage" :page-sizes="[10, 20, 40, 50, 100]" :page-size="pageSize" :layout="isMobile ? 'pager' : '->,total, sizes, prev, pager, next, jumper'
+      " :total="total">
     </el-pagination>
   </div>
 </template>
@@ -202,7 +98,7 @@ export default {
     tableName: { type: String, default: "" },
     title: { type: String, default: "" },
     formList: { type: Array, default: () => [] },
-    ruleList: { type: Object, default: () => {} },
+    ruleList: { type: Object, default: () => { } },
   },
   setup(props) {
     const store = useStore();
@@ -305,8 +201,8 @@ export default {
       const url = isAdd.value
         ? "insert"
         : isEdit.value
-        ? `update/${form.id}`
-        : "";
+          ? `update/${form.id}`
+          : "";
       submitData(url, props.tableName, form).then((res) => {
         tableList.value = res;
         total.value = res.length;
@@ -377,6 +273,7 @@ export default {
     background-color: var(--el-button-bg-color);
     box-sizing: border-box;
   }
+
   #tableButton svg {
     color: #67c23a;
     padding-left: 10px;

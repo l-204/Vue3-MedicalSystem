@@ -58,6 +58,12 @@ export const activityItem = [
     icon: "Check",
   },
   {
+    content: "项目更新",
+    timestamp: "2024-04-20",
+    type: "success",
+    icon: "Check",
+  },
+  {
     content: "项目上线",
     timestamp: "2024-03-28",
     type: "success",
@@ -75,6 +81,12 @@ export const activityItem = [
     type: "success",
     icon: "Check",
   },
+]
+
+export const progressItem = [
+  { id:1, title: '首页模块', icon: 'House',},
+  { id:2, title: '管理模块', icon: 'EditPen',},
+  { id:3, title: '其它模块', icon: 'More',},
 ]
 
 export const emailMenuItem = [

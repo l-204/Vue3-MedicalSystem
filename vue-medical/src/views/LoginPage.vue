@@ -1,62 +1,27 @@
 <template>
   <div class="LoginContainer">
-    <img
-      id="LoginBackground"
-      class="LoginBackground"
-      src="../assets/Background.jpg"
-    />
+    <img id="LoginBackground" class="LoginBackground" src="../assets/Background.jpg" />
 
     <div id="RegisterForm" class="LoginForm">
-      <el-form
-        :model="registerForm"
-        status-icon
-        :rules="registerRuleList"
-        ref="registerFormRef"
-        v-loading="loading"
-      >
+      <el-form :model="registerForm" status-icon :rules="registerRuleList" ref="registerFormRef" v-loading="loading">
         <div class="title">注&emsp;册</div>
         <el-form-item prop="username">
-          <el-input
-            clearable
-            input-style="border-bottom: 1px solid var(--el-input-border-color)"
-            v-model="registerForm.username"
-            placeholder="用户名"
-            prefix-icon="User"
-            size="large"
-          ></el-input>
+          <el-input clearable input-style="border-bottom: 1px solid var(--el-input-border-color)"
+            v-model="registerForm.username" placeholder="用户名" prefix-icon="User" size="large"></el-input>
         </el-form-item>
         <el-form-item prop="password">
-          <el-input
-            clearable
-            input-style="border-bottom: 1px solid var(--el-input-border-color)"
-            type="password"
-            v-model="registerForm.password"
-            autocomplete="off"
-            placeholder="密码"
-            prefix-icon="Unlock"
-            size="large"
-          >
+          <el-input clearable input-style="border-bottom: 1px solid var(--el-input-border-color)" type="password"
+            v-model="registerForm.password" autocomplete="off" placeholder="密码" prefix-icon="Unlock" size="large">
           </el-input>
         </el-form-item>
         <el-form-item prop="checkpassword">
-          <el-input
-            clearable
-            input-style="border-bottom: 1px solid var(--el-input-border-color)"
-            type="password"
-            v-model="registerForm.checkpassword"
-            autocomplete="off"
-            placeholder="确认密码"
-            prefix-icon="Unlock"
-            size="large"
-          >
+          <el-input clearable input-style="border-bottom: 1px solid var(--el-input-border-color)" type="password"
+            v-model="registerForm.checkpassword" autocomplete="off" placeholder="确认密码" prefix-icon="Unlock"
+            size="large">
           </el-input>
         </el-form-item>
         <el-form-item>
-          <el-button
-            type="primary"
-            @click="handleRegister(registerFormRef)"
-            size="large"
-            >注 册
+          <el-button type="primary" @click="handleRegister(registerFormRef)" size="large">注 册
           </el-button>
         </el-form-item>
         <p style="text-align: right">
@@ -66,61 +31,29 @@
     </div>
 
     <div id="LoginForm" class="LoginForm">
-      <el-form
-        :model="loginForm"
-        status-icon
-        :rules="loginRuleList"
-        ref="loginFormRef"
-        v-loading="loading"
-      >
+      <el-form :model="loginForm" status-icon :rules="loginRuleList" ref="loginFormRef" v-loading="loading">
         <div class="title">登&emsp;录</div>
 
         <el-form-item prop="username">
-          <el-input
-            clearable
-            input-style="border-bottom: 1px solid var(--el-input-border-color)"
-            v-model="loginForm.username"
-            placeholder="用户名"
-            prefix-icon="User"
-            size="large"
-          >
+          <el-input clearable input-style="border-bottom: 1px solid var(--el-input-border-color)"
+            v-model="loginForm.username" placeholder="用户名" prefix-icon="User" size="large">
           </el-input>
         </el-form-item>
         <el-form-item prop="password">
-          <el-input
-            clearable
-            input-style="border-bottom: 1px solid var(--el-input-border-color)"
-            type="password"
-            v-model="loginForm.password"
-            autocomplete="off"
-            placeholder="密码"
-            prefix-icon="Unlock"
-            size="large"
-          >
+          <el-input clearable input-style="border-bottom: 1px solid var(--el-input-border-color)" type="password"
+            v-model="loginForm.password" autocomplete="off" placeholder="密码" prefix-icon="Unlock" size="large">
           </el-input>
         </el-form-item>
         <el-form-item prop="verify">
-          <el-input
-            clearable
-            input-style="border-bottom: 1px solid var(--el-input-border-color)"
-            v-model="loginForm.verify"
-            autocomplete="off"
-            placeholder="验证码"
-            prefix-icon="Unlock"
-            size="large"
-          >
+          <el-input clearable input-style="border-bottom: 1px solid var(--el-input-border-color)"
+            v-model="loginForm.verify" autocomplete="off" placeholder="验证码" prefix-icon="Unlock" size="large">
             <template #append>
               <SIdentify @verify="handleVerify"></SIdentify>
             </template>
           </el-input>
         </el-form-item>
         <el-form-item>
-          <el-button
-            type="primary"
-            @click="handleLogin(loginFormRef)"
-            size="large"
-            >登 录</el-button
-          >
+          <el-button type="primary" @click="handleLogin(loginFormRef)" size="large">登 录</el-button>
         </el-form-item>
         <p style="text-align: right">
           还没账号？立即前往<a href="#" @click="toRegister">注册</a>
@@ -139,6 +72,7 @@ import { formatTime } from "../utils/formatTime";
 import { ref, reactive } from "vue";
 import { useRouter } from "vue-router";
 import { useStore } from "../store/index";
+import { setToken } from '../utils/auth'
 
 // 验证码校验
 let validateVerify = (rule, value, callback) => {
@@ -203,9 +137,10 @@ const handleLogin = async (loginFormRef) => {
     // 发送登录请求
     Login(loginForm).then((res) => {
       loading.value = !loading.value;
-      // 获取token
+      // 在登录成功后获取 token
       const token = res.token;
-      localStorage.setItem("token", token);
+      // 存储到 Cookies 中
+      setToken(token)
       // 删除密码
       delete res.userInfo.password;
       // 处理时间格式
@@ -280,6 +215,7 @@ const toLogin = () => {
   .LoginBackground {
     display: none;
   }
+
   #RegisterForm {
     transform: translateX(0) !important;
   }

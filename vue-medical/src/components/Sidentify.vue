@@ -1,11 +1,6 @@
 <template>
   <div class="img-verify" style="width: 120px; height: 40px">
-    <canvas
-      ref="verify"
-      :width="width"
-      :height="height"
-      @click="handleDraw()"
-    ></canvas>
+    <canvas ref="verify" :width="width" :height="height" @click="handleDraw()"></canvas>
   </div>
 </template>
 
@@ -25,7 +20,7 @@ onMounted(() => {
 // 在父组件设置@verify将imgCode传递过去
 const emit = defineEmits(['verify'])
 const childToParent = () => {
-    emit('verify',imgCode.value)
+  emit('verify', imgCode.value)
 }
 // 点击图片重新绘制
 const handleDraw = () => {

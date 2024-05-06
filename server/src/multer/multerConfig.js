@@ -12,7 +12,7 @@ const storage = multer.diskStorage({
   // 3.1 存储路径
   destination: function(req, file, cb) {
     if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png' || file.mimetype==='image/gif') {
-      cb(null, handlePath('../../public'))
+      cb(null, handlePath('../public'))
     } else {
       cb({ error: '仅支持 jpg/png/gif 格式的图片！' })
     }

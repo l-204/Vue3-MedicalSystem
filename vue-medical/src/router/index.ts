@@ -12,6 +12,7 @@ import TestPage from "../views/TestPage.vue";
 import NotFound from '../views/NotFound.vue';
 
 import { jwtDecode } from 'jwt-decode';
+import { getToken, removeToken } from '../utils/auth';
 
 const routes: Array<RouteRecordRaw> = [
     // 默认跳转至首页
@@ -114,7 +115,7 @@ const router = createRouter({
 
 // 设置路由守卫
 router.beforeEach((to, _from, next) => {
-    const token = localStorage.getItem('token');
+    const token = getToken();
 
     if (to.path === '/register' || to.path === '/login') {
         // 如果用户访问注册或登录路径，则不需要判断登录状态
@@ -127,8 +128,9 @@ router.beforeEach((to, _from, next) => {
             try {
                 const decodedToken = jwtDecode(token);
                 if (decodedToken.exp! * 1000 < Date.now()) {
-                    // Token已过期，清除localStorage数据
+                    // Token已过期，清除 localStorage 数据和 Token 数据
                     localStorage.clear();
+                    removeToken();
                     // 执行其他过期处理逻辑，比如跳转到登录页面
                     next('/login');
                 } else {

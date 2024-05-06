@@ -64,7 +64,7 @@ function uploadAvatar(req, res) {
         reject(err)
       } else {
         // 对图片进行去重删除和重命名
-        hanldeImgDelAndRename(req.params.id, req.file.filename, handlePath('../../public'))
+        hanldeImgDelAndRename(req.params.id, req.file.filename, handlePath('../public'))
         const img = req.file.filename.split('.')
         resolve({
           id: req.params.id,

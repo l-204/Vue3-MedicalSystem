@@ -2,8 +2,23 @@ import request from '../utils/request'
 
 export function getAllEmail(){
     return request({
-        url: '/api/all/select/email',
+        url: '/api/table/select/email',
         method: 'get'
+    })
+}
+
+export function setEmail(formData: object){
+    return request({
+        url:'/api/table/insert/email',
+        method:'post',
+        data: formData,
+    })
+}
+
+export function deleteEmail(){
+    return request({
+        url:'/api/table/delete/email',
+        method:'',
     })
 }
 
@@ -14,24 +29,10 @@ export function getUserEmail(){
     })
 }
 
-export function setEmail(formData: object){
+export function setSelectedEmail(selectedEmails: Array<object>){
     return request({
-        url:'/api/all/insert/email',
+        url:'/api/email/selected',
         method:'post',
-        data: formData,
-    })
-}
-
-export function updateEmail(){
-    return request({
-        url:'/api/all/update/email',
-        method:'',
-    })
-}
-
-export function deleteEmail(){
-    return request({
-        url:'/api/all/delete/email',
-        method:'',
+        data: selectedEmails
     })
 }

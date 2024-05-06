@@ -14,13 +14,8 @@
                 {{ item.name }}
               </span>
             </template>
-            <component
-              :is="TablePage"
-              :table-name="item.tableName"
-              :title="item.formTitle"
-              :form-list="item.formData"
-              :rule-list="item.ruleData"
-            ></component>
+            <component :is="TablePage" :table-name="item.tableName" :title="item.formTitle" :form-list="item.formData"
+              :rule-list="item.ruleData"></component>
           </el-tab-pane>
         </el-tabs>
       </template>
