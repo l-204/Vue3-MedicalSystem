@@ -56,20 +56,20 @@
             </el-col>
             <!-- 开发进度 -->
             <el-col :sm="12" :md="7" :lg="7" :xl="7">
-              <el-card body-style="flex-grow:1;" style="display: flex; flex-direction: column">
+              <el-card body-style="flex-grow:1;overflow:auto;" style="display: flex; flex-direction: column">
                 <template #header>
                   <el-icon>
                     <DataLine />
                   </el-icon> 开发进度
                 </template>
                 <div style="height: 100%; display: flex; flex-direction: column">
-                  <div style="flex-grow: 1" v-for="item in progressItem" :key="item.id">
+                  <div style="flex-grow: 1;padding-bottom:20px;" v-for="item in progressItem" :key="item.id">
                     <div>
                       <el-icon>
                         <component :is="item.icon" />
                       </el-icon> {{ item.title }}
                     </div>
-                    <el-progress :percentage="100" status="success"></el-progress>
+                    <el-progress :percentage="item.percentage" :status="item.status"></el-progress>
                   </div>
                 </div>
               </el-card>

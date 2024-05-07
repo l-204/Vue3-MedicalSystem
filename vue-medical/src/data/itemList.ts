@@ -53,7 +53,7 @@ export const menuItem = [
 export const activityItem = [
   {
     content: "项目更新",
-    timestamp: "2024-05-05",
+    timestamp: "2024-05-07",
     type: "success",
     icon: "Check",
   },
@@ -84,9 +84,87 @@ export const activityItem = [
 ]
 
 export const progressItem = [
-  { id:1, title: '首页模块', icon: 'House',},
-  { id:2, title: '管理模块', icon: 'EditPen',},
-  { id:3, title: '其它模块', icon: 'More',},
+  {
+    id: 1,
+    title: '首页',
+    implement: '水平、垂直导航栏，模块总览，个人信息，图表，轮播图，开发进度，开发日志，布局自适应',
+    unimplement: '',
+    icon: 'HomeFilled',
+    percentage: 100,
+    status:'success'
+  },
+  {
+    id: 2,
+    title: '个人中心',
+    implement: '个人信息修改，头像上传，布局自适应',
+    unimplement: '',
+    icon: 'UserFilled',
+    percentage: 100,
+    status:'success'
+  },
+  {
+    id: 3,
+    title: '信息管理',
+    implement: '表格封装，增删改查，分页，关键字搜索，身份验证，布局自适应',
+    unimplement: '',
+    icon: 'List',
+    percentage: 100,
+    status:'success'
+  },
+  {
+    id: 4,
+    title: '邮件管理',
+    implement: '全选，取消，删除，写信发送功能，布局自适应',
+    unimplement: '恢复垃圾邮件，撤回发送邮件，编辑草稿邮件，发送草稿邮件，模糊搜索邮件，标记已读未读邮件',
+    icon: 'Comment',
+    percentage: 50,
+    status:''
+  },
+  {
+    id: 5,
+    title: '统计分析',
+    implement: '全屏，下载图片，布局自适应',
+    unimplement: '标题文字自适应',
+    icon: 'Histogram',
+    percentage: 100,
+    status:'success'
+  },
+  {
+    id: 6,
+    title: '院内导航',
+    implement: '切换主题，路线规划，布局自适应',
+    unimplement: '',
+    icon: 'LocationFilled',
+    percentage: 100,
+    status:'success'
+  },
+  {
+    id: 7,
+    title: '系统设置',
+    implement: '权限管理',
+    unimplement: '权限管理逻辑优化，系统监控',
+    icon: 'Tools',
+    percentage: 60,
+    status:''
+  },
+  {
+    id: 8,
+    title: '登录注册',
+    implement: '注册，登录，验证码，表单验证，切换过渡，路由守卫',
+    unimplement: '忘记密码',
+    icon: 'Promotion',
+    percentage: 100,
+    status:'success'
+  },
+  {
+    id: 9,
+    title: '项目结构',
+    implement: 'Vue3写法，服务器结构划分',
+    unimplement: '前端结构划分，接口文档编写',
+    icon: 'Grid',
+    percentage: 70,
+    status:''
+  },
 ]
 
 export const emailMenuItem = [

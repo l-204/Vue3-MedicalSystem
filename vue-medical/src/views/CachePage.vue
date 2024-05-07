@@ -1,26 +1,27 @@
 <template>
-    <div>
-        <div style="background-color: red;width:300px;height:300px">
-        </div>
-    </div>
+  <div>
+    <!-- <el-button @click="handleRoute">跳转到4</el-button> -->
+    <el-menu :default-active="activeIndex" class="el-menu-demo" mode="vertical" @select="handleRoute">
+      <el-menu-item index="1">Home</el-menu-item>
+      <el-menu-item index="1">Processing Center</el-menu-item>
+      <el-menu-item index="3">Info</el-menu-item>
+      <el-menu-item index="4">Orders</el-menu-item>
+    </el-menu>
+  </div>
 </template>
 
+<script lang="ts" setup>
+import { ref } from "vue";
+import { onBeforeRouteUpdate } from "vue-router";
+const activeIndex = ref<string>("1");
+const handleRoute = () => {
+  activeIndex.value = "4"; // 将activeIndex的值设置为点击的菜单项的index
+  console.log(activeIndex.value);
+};
+// 菜单激活的路由
 
-<script>
-export default {
-    props: {
-    emailForm: { type: Object,default: () => ({}) },
-  },
-  setup(props){
-    console.log(props.emailForm)
-    const test = '测试'
-
-    return{test}
-  }
-  
-}
+// 路由监听
+onBeforeRouteUpdate(() => {
+  activeIndex.value = "4";
+});
 </script>
-
-<style>
-
-</style>
