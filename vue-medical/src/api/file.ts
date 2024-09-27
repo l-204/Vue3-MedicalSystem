@@ -1,4 +1,4 @@
-import { request } from '../utils/request'
+import { request } from '@/utils/request'
 
 export function uploadAvatar(id:number, formData:FormData){
     return request({

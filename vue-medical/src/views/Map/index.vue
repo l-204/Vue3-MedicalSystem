@@ -1,13 +1,14 @@
 <template>
-    <MenuPage>
+    <Layout>
         <div id="container">
             <div id="panel"></div>
         </div>
-    </MenuPage>
+    </Layout>
 </template>
 
 
 <script setup>
+import Layout from '@/layout/index.vue';
 import AMapLoader from '@amap/amap-jsapi-loader';
 /*在Vue3中使用时,需要引入Vue3中的shallowRef方法(使用shallowRef进行非深度监听,
 因为在Vue3中所使用的Proxy拦截操作会改变JSAPI原生对象,所以此处需要区别Vue2使用方式对地图对象进行非深度监听,

@@ -23,7 +23,7 @@
         </div>
       </div>
       <template #reference>
-        <el-badge :value="emailList.length" :max="99" :offset="[-15, 15]" :hidden="!emailList.length">
+        <el-badge :value="emailList.length" :max="99" :offset="[0, 5]" :hidden="!emailList.length">
           <el-button icon="Bell" circle class="shake"></el-button>
         </el-badge>
       </template>
@@ -32,12 +32,12 @@
 </template>
 
 <script setup>
-import { email } from "../mock/email";
+import { email } from "@/mock/email";
 import { computed, onMounted, ref, reactive } from "vue";
 import { useRouter } from "vue-router";
-import { useStore } from "../store/index";
-import { getUserEmail } from "../api/email";
-import { formatTime } from "../utils/formatTime";
+import { useStore } from "@/store/index";
+import { getUserEmail } from "@/api/email";
+import { formatTime } from "@/utils/formatTime";
 
 const store = useStore();
 const router = useRouter();
@@ -46,20 +46,6 @@ const isMobile = computed(() => store.isMobile);
 const emailList = ref([]);
 const userInfo = JSON.parse(localStorage.getItem("userInfo"));
 const userList = ref([]);
-
-// 获取邮箱信息
-getUserEmail()
-  .then((res) => {
-    // 过滤出未读邮件
-    const toData = res.filter(
-      (item) => item.to_id === userInfo.user_id && item.state === "未读"
-    );
-    // 格式化对象中的时间属性
-    formatTime(toData);
-    // 保存到 emailList 中
-    emailList.value = toData;
-  })
-  .catch((err) => console.log(err));
 
 const handleRoute = (id) => {
   // 将邮件状态设为已读
@@ -73,9 +59,27 @@ const handleRoute = (id) => {
   // 跳转到未读邮件对应的页面
   router.push({ name: "Email", query: { emailId: id } });
 };
+
+// 获取邮箱信息
+const init = async () => {
+  const res = await getUserEmail();
+  // 过滤出未读邮件
+  const toData = res.filter(
+      (item) => item.to_id === userInfo.user_id && item.state === "未读"
+    );
+    // 格式化对象中的时间属性
+    formatTime(toData);
+    // 保存到 emailList 中
+    emailList.value = toData;
+}
+onMounted(() => init())
 </script>
 
-<style>
+<style scoped>
+.MessageBellContainer {
+  margin: auto 10px;
+}
+
 .popoverBorder {
   max-height: 280px;
   overflow: auto;

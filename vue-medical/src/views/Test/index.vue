@@ -1,7 +1,6 @@
 <template>
-  <div>
-    <MenuPage>
-      <el-card style="width:500px;height:80vh;margin:20px auto;overflow:auto;">
+  <Layout>
+    <el-card style="width:500px;height:80vh;margin:20px auto;overflow:auto;">
         <template #header>
           <el-icon>
             <DataLine />
@@ -21,11 +20,11 @@
           </el-card>
         </div>
       </el-card>
-    </MenuPage>
-  </div>
+  </Layout>
 </template>
 <script setup>
-import { progressItem } from '../data/itemList'
+import { progressItem } from '@/data/itemList';
+import Layout from '@/layout/index.vue';
 /**
  * 1. 邮件管理模块：；尚未实现：
  * 2. 系统设置模块：系统监控

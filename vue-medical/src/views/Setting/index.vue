@@ -1,10 +1,6 @@
 <template>
-  <div>
-    <!-- 调用菜单组件 -->
-    <MenuPage>
-      <template v-slot:default>
-        <!-- 这里是需要显示在 el-main 中的内容 -->
-        <div class="Container">
+  <Layout>
+    <div class="container">
           <div class="SettingContent">
             <el-row>
               <el-col :sm="9" :md="8" :lg="6" :xl="6">
@@ -27,16 +23,14 @@
             </el-row>
           </div>
         </div>
-      </template>
-    </MenuPage>
-  </div>
+  </Layout>
 </template>
 
 <script setup>
-import MenuPage from "../components/MenuPage.vue";
+import Layout from "@/layout/index.vue";
 import { ref } from "vue";
-import { getTableData } from "../api/table";
-import { updateRight } from "../api/setting";
+import { getTableData } from "@/api/table";
+import { updateRight } from "@/api/setting";
 import { ElMessage, ElMessageBox } from "element-plus";
 
 const userList = ref([]);
@@ -103,7 +97,10 @@ const confirmRight = () => {
 };
 </script>
 
-<style>
+<style scoped>
+.container{
+  padding:20px;
+}
 .SettingContent .rightContent {
   border-radius: 20px;
   box-shadow: 0 0 4px 2px rgba(0, 0, 0, 0.2);

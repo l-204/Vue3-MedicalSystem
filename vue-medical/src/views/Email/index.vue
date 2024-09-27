@@ -1,36 +1,32 @@
 <template>
-  <div>
-    <!-- 调用菜单组件 -->
-    <MenuPage>
-      <template #default>
-        <!-- 这里是需要显示在 el-main 中的内容 -->
-        <!-- 抽屉 -->
-        <el-drawer v-model="isOpen" title="写信" size="100%">
-          <Writing :emailForm="emailForm" />
-        </el-drawer>
+  <Layout>
+    <!-- 抽屉 -->
+    <el-drawer v-model="isOpen" title="写信" size="100%">
+      <Writing :emailForm="emailForm" />
+    </el-drawer>
 
-        <el-drawer v-model="isRead" title="邮件" size="100%">
-          <div style="font-size: 30px">
-            <strong>{{ targetEmail.topic }}</strong>
-          </div>
-          <div style="display: flex; margin: 20px auto">
-            <el-avatar :src="targetEmail.from_avatar" style="flex-shrink: 0">{{
+    <el-drawer v-model="isRead" title="邮件" size="100%">
+      <div style="font-size: 30px">
+        <strong>{{ targetEmail.topic }}</strong>
+      </div>
+      <div style="display: flex; margin: 20px auto">
+        <el-avatar :src="targetEmail.from_avatar" style="flex-shrink: 0">{{
           targetEmail.from_name[0]
         }}</el-avatar>
-            <div style="margin: auto 10px; font-size: 0.8rem">
-              <div style="margin: auto">
-                {{ targetEmail.from_name }}
-                <span style="color: var(--el-text-color-secondary)">{{
-          targetEmail.send_at
-        }}</span>
-              </div>
-              <div style="margin: 5px auto">
-                <span style="color: var(--el-text-color-secondary)">发送给：&nbsp;</span>
-                {{ targetEmail.to_name }}
-              </div>
-            </div>
+        <div style="margin: auto 10px; font-size: 0.8rem">
+          <div style="margin: auto">
+            {{ targetEmail.from_name }}
+            <span style="color: var(--el-text-color-secondary)">{{
+              targetEmail.send_at
+            }}</span>
           </div>
-          <div style="
+          <div style="margin: 5px auto">
+            <span style="color: var(--el-text-color-secondary)">发送给：&nbsp;</span>
+            {{ targetEmail.to_name }}
+          </div>
+        </div>
+      </div>
+      <div style="
               border-bottom: 1px solid var(--el-border-color);
               border-top: 1px solid var(--el-border-color);
               margin: 20px auto;
@@ -38,46 +34,46 @@
               font-size: 14px;
               font-family: 'SimSun';
             ">
-            <div v-html="targetEmail.content"></div>
-          </div>
-          <div style="display: flex">
-            <el-button icon="ChatLineRound">回复</el-button>
-            <el-button icon="TopRight">转发</el-button>
-          </div>
-        </el-drawer>
+        <div v-html="targetEmail.content"></div>
+      </div>
+      <div style="display: flex">
+        <el-button icon="ChatLineRound">回复</el-button>
+        <el-button icon="TopRight">转发</el-button>
+      </div>
+    </el-drawer>
 
-        <el-container style="height: 100%">
-          <el-aside id="emailAside" style="width: 180px">
-            <el-menu :default-active="defaultIndex">
-              <!-- 顶部标题 -->
-              <div class="emailTop" style="display: flex; flex-direction: column; padding: 10px">
-                <el-button @click="handleWriting" style="
+    <el-container style="height: 100%">
+      <el-aside id="emailAside" style="width: 180px;height:100%">
+        <el-menu :default-active="defaultIndex" style="height:100%;">
+          <!-- 顶部标题 -->
+          <div class="emailTop" style="display: flex; flex-direction: column; padding: 10px">
+            <el-button @click="handleWriting" style="
                     margin: 10px 0;
                     font-size: 16px;
                     box-shadow: var(--el-box-shadow-lighter);
                     color: #67c23a;
                   " size="large" icon="EditPen">
-                  <span id="emailWriteButton">写信</span></el-button>
-              </div>
-              <!-- 导航栏主体 -->
-              <template v-for="(item, index) in menuList" :key="item.id">
-                <el-tooltip effect="dark" :content="item.name" placement="right" :disabled="!isMobile">
-                  <el-menu-item :index="item.index" @click="handlePage(item.id)" style="justify-content: center">
-                    <el-icon>
-                      <component :is="item.icon"></component>
-                    </el-icon>
-                    <template #title>
-                      <span id="emailLabel" style="font-family: SimSun; font-size: 16px">
-                        <strong>{{ item.name }}</strong>
-                      </span>
-                    </template>
-                  </el-menu-item>
-                </el-tooltip>
-              </template>
-            </el-menu>
-          </el-aside>
-          <el-main style="display: flex; height: 100%">
-            <div class="emailList" style="
+              <span id="emailWriteButton">写信</span></el-button>
+          </div>
+          <!-- 导航栏主体 -->
+          <template v-for="(item, index) in menuList" :key="item.id">
+            <el-tooltip effect="dark" :content="item.name" placement="right" :disabled="!isMobile">
+              <el-menu-item :index="item.index" @click="handlePage(item.id)" style="justify-content: center">
+                <el-icon>
+                  <component :is="item.icon"></component>
+                </el-icon>
+                <template #title>
+                  <span id="emailLabel" style="font-family: SimSun; font-size: 16px">
+                    <strong>{{ item.name }}</strong>
+                  </span>
+                </template>
+              </el-menu-item>
+            </el-tooltip>
+          </template>
+        </el-menu>
+      </el-aside>
+      <el-main style="display: flex; height: 100%;padding:0;">
+        <div class="emailList" style="
                 display: flex;
                 flex-direction: column;
                 flex-shrink: 0;
@@ -85,34 +81,34 @@
                 background-color: var(--bPageBgColor);
                 margin: 0;
               ">
-              <!-- 上方按钮 -->
-              <div class="emailOperations">
-                <el-input v-model="from_id" prefix-icon="Search" placeholder="搜索邮件主题" clearable></el-input>
-                <div style="margin: 10px auto">
-                  <el-button icon="Select" size="small" style="
+          <!-- 上方按钮 -->
+          <div class="emailOperations">
+            <el-input v-model="from_id" prefix-icon="Search" placeholder="搜索邮件主题" clearable></el-input>
+            <div style="margin: 10px auto">
+              <el-button icon="Select" size="small" style="
                       border: none;
                       font-size: 14px;
                       float: left;
                       margin: auto;
                     " v-show="openCheckbox" @click="handleSelectAll">全选</el-button>
-                  <el-button icon="CloseBold" size="small" style="
+              <el-button icon="CloseBold" size="small" style="
                       border: none;
                       font-size: 14px;
                       float: right;
                       margin: auto;
                     " v-show="openCheckbox" @click="handleCancelSelect">取消</el-button>
-                </div>
-              </div>
-              <!-- 邮件列表 -->
-              <div style="overflow: auto; flex-grow: 1">
-                <!-- 有未读邮件时 -->
-                <div class="emailItem" v-for="item in emailList" @click="handleOpen(item)">
-                  <el-checkbox v-model="item.checked" style="margin: auto 10px" @click="handleStopPropagation"
-                    v-show="openCheckbox" />
-                  <el-avatar :src="item.from_avatar" style="flex-shrink: 0">{{
-          item.from_name
-        }}</el-avatar>
-                  <div style="
+            </div>
+          </div>
+          <!-- 邮件列表 -->
+          <div style="overflow: auto; flex-grow: 1">
+            <!-- 有未读邮件时 -->
+            <div class="emailItem" v-for="item in emailList" @click="handleOpen(item)">
+              <el-checkbox v-model="item.checked" style="margin: auto 10px" @click="handleStopPropagation"
+                v-show="openCheckbox" />
+              <el-avatar :src="item.from_avatar" style="flex-shrink: 0">{{
+                item.from_name
+              }}</el-avatar>
+              <div style="
                       display: flex;
                       flex-direction: column;
                       flex-grow: 1;
@@ -122,72 +118,72 @@
                       font-size: clamp(0.7rem, 0.489rem + 1.05vw, 0.8rem);
                       color: var(--el-text-color-primary);
                     ">
-                    <div style="text-overflow: ellipsis; overflow: hidden">
-                      {{ item.from_name }}
-                    </div>
-                    <div style="
+                <div style="text-overflow: ellipsis; overflow: hidden">
+                  {{ item.from_name }}
+                </div>
+                <div style="
                         margin: 5px 0;
                         text-overflow: ellipsis;
                         overflow: hidden;
                       ">
-                      {{ item.topic }}
-                    </div>
-                    <div style="
+                  {{ item.topic }}
+                </div>
+                <div style="
                         color: var(--el-text-color-secondary);
                         text-overflow: ellipsis;
                         overflow: hidden;
                       ">
-                      <!-- 用正则表达式删去html标签 -->
-                      {{ item.content.replace(/<[^>]*>/g, "") }}
-                    </div>
-                  </div>
-                  <div style="
+                  <!-- 用正则表达式删去html标签 -->
+                  {{ item.content.replace(/<[^>]*>/g, "") }}
+                </div>
+              </div>
+              <div style="
                       display: flex;
                       flex-direction: column;
                       flex-shrink: 0;
                       font-size: clamp(0.7rem, 0.489rem + 1.05vw, 0.8em);
                       color: var(--el-text-color-primary);
                     ">
-                    <div style="
+                <div style="
                         align-items: flex-start;
                         flex-grow: 1;
                         color: var(--el-text-color-secondary);
                       ">
-                      {{ item.send_at.split(" ")[0] }}
-                    </div>
-                    <div style="align-items: flex-end; text-align: right">
-                      <el-dropdown trigger="click">
-                        <span @click="handleStopPropagation">
-                          <el-icon style="
+                  {{ item.send_at.split(" ")[0] }}
+                </div>
+                <div style="align-items: flex-end; text-align: right">
+                  <el-dropdown trigger="click">
+                    <span @click="handleStopPropagation">
+                      <el-icon style="
                               transform: rotate(90deg);
                               vertical-align: text-bottom;
                             ">
-                            <MoreFilled />
-                          </el-icon>
-                        </span>
-                        <template #dropdown>
-                          <el-dropdown-menu style="
+                        <MoreFilled />
+                      </el-icon>
+                    </span>
+                    <template #dropdown>
+                      <el-dropdown-menu style="
                               font-size: clamp(
                                 0.7rem,
                                 0.489rem + 1.05vw,
                                 0.8em
                               );
                             ">
-                            <el-dropdown-item icon="Finished" @click="handleSelect(item)">多选</el-dropdown-item>
-                            <el-dropdown-item icon="RefreshLeft" @click="handleCancel(item)"
-                              v-if="selectedIndex === 4">撤回</el-dropdown-item>
-                            <el-dropdown-item icon="RefreshLeft" @click="handleRecover(item)"
-                              v-if="selectedIndex === 5">恢复</el-dropdown-item>
-                            <el-dropdown-item icon="Delete" @click="handleDelete(item)"
-                              v-if="selectedIndex !== 4">删除</el-dropdown-item>
-                          </el-dropdown-menu>
-                        </template>
-                      </el-dropdown>
-                    </div>
-                  </div>
+                        <el-dropdown-item icon="Finished" @click="handleSelect(item)">多选</el-dropdown-item>
+                        <el-dropdown-item icon="RefreshLeft" @click="handleCancel(item)"
+                          v-if="selectedIndex === 4">撤回</el-dropdown-item>
+                        <el-dropdown-item icon="RefreshLeft" @click="handleRecover(item)"
+                          v-if="selectedIndex === 5">恢复</el-dropdown-item>
+                        <el-dropdown-item icon="Delete" @click="handleDelete(item)"
+                          v-if="selectedIndex !== 4">删除</el-dropdown-item>
+                      </el-dropdown-menu>
+                    </template>
+                  </el-dropdown>
                 </div>
-                <!-- 没有邮件时 -->
-                <div style="
+              </div>
+            </div>
+            <!-- 没有邮件时 -->
+            <div style="
                     display: flex;
                     flex-grow: 1;
                     justify-content: center;
@@ -195,25 +191,25 @@
                     color: var(--el-text-color-regular);
                     padding: 20px;
                   ">
-                  这里没有邮件呢....
-                </div>
-              </div>
-              <!-- 下方按钮 -->
-              <div style="display: flex; padding: 10px" v-show="openCheckbox">
-                <el-button icon="View" size="small" style="border: none; font-size: 14px; flex-grow: 1"
-                  v-show="openCheckbox && selectedIndex === 2" @click="handleReadSelected">已读</el-button>
-                <el-button icon="Position" size="small" style="border: none; font-size: 14px; flex-grow: 1"
-                  v-show="openCheckbox && selectedIndex === 3" @click="handleSendSelected">发送</el-button>
-                <el-button icon="RefreshLeft" size="small" style="border: none; font-size: 14px; flex-grow: 1"
-                  v-show="openCheckbox && selectedIndex === 4" @click="handleCancelSelected">撤回</el-button>
-                <el-button icon="RefreshLeft" size="small" style="border: none; font-size: 14px; flex-grow: 1"
-                  v-show="openCheckbox && selectedIndex === 5" @click="handleRecoverSelected">恢复</el-button>
-                <el-button icon="Delete" size="small" style="border: none; font-size: 14px; flex-grow: 1"
-                  v-show="openCheckbox && selectedIndex !== 4" @click="handleDeleteSelected">删除</el-button>
-              </div>
+              这里没有邮件呢....
             </div>
-            <!-- 未点击邮件时 -->
-            <div v-if="!targetId" class="emailContent" style="
+          </div>
+          <!-- 下方按钮 -->
+          <div style="display: flex; padding: 10px" v-show="openCheckbox">
+            <el-button icon="View" size="small" style="border: none; font-size: 14px; flex-grow: 1"
+              v-show="openCheckbox && selectedIndex === 2" @click="handleReadSelected">已读</el-button>
+            <el-button icon="Position" size="small" style="border: none; font-size: 14px; flex-grow: 1"
+              v-show="openCheckbox && selectedIndex === 3" @click="handleSendSelected">发送</el-button>
+            <el-button icon="RefreshLeft" size="small" style="border: none; font-size: 14px; flex-grow: 1"
+              v-show="openCheckbox && selectedIndex === 4" @click="handleCancelSelected">撤回</el-button>
+            <el-button icon="RefreshLeft" size="small" style="border: none; font-size: 14px; flex-grow: 1"
+              v-show="openCheckbox && selectedIndex === 5" @click="handleRecoverSelected">恢复</el-button>
+            <el-button icon="Delete" size="small" style="border: none; font-size: 14px; flex-grow: 1"
+              v-show="openCheckbox && selectedIndex !== 4" @click="handleDeleteSelected">删除</el-button>
+          </div>
+        </div>
+        <!-- 未点击邮件时 -->
+        <div v-if="!targetId" class="emailContent" style="
                 display: flex;
                 flex-direction: column;
                 background-color: var(--bMainPageColor);
@@ -221,48 +217,48 @@
                 text-align: center;
                 justify-content: center;
               ">
-              <div>
-                <img src="../assets/email.svg" style="width: 200px; height: 200px" />
-              </div>
-              <div style="
+          <div>
+            <img src="@/assets/svg/email.svg" style="width: 200px; height: 200px" />
+          </div>
+          <div style="
                   font-size: 20px;
                   padding-bottom: 10px;
                   color: var(--el-text-color-regular);
                 ">
-                未选中邮件
-              </div>
-              <div style="color: var(--el-text-color-regular)">
-                请先选择要阅读的文件
-              </div>
-            </div>
-            <!-- 点击邮件时 -->
-            <div v-else style="
+            未选中邮件
+          </div>
+          <div style="color: var(--el-text-color-regular)">
+            请先选择要阅读的文件
+          </div>
+        </div>
+        <!-- 点击邮件时 -->
+        <div v-else style="
                 padding: 40px;
                 background-color: var(--bPageBgColor);
                 width: 100%;
               " class="emailContent">
-              <div>
-                <div style="font-size: 30px">
-                  <strong>{{ targetEmail.topic }}</strong>
+          <div>
+            <div style="font-size: 30px">
+              <strong>{{ targetEmail.topic }}</strong>
+            </div>
+            <div style="display: flex; margin: 20px auto">
+              <el-avatar :src="targetEmail.from_avatar" style="flex-shrink: 0">{{ targetEmail.from_name[0]
+                }}</el-avatar>
+              <div style="margin: auto 10px; font-size: 0.8rem">
+                <div style="margin: auto">
+                  {{ targetEmail.from_name }}
+                  <span style="color: var(--el-text-color-secondary)">{{
+                    targetEmail.send_at
+                  }}</span>
                 </div>
-                <div style="display: flex; margin: 20px auto">
-                  <el-avatar :src="targetEmail.from_avatar" style="flex-shrink: 0">{{ targetEmail.from_name[0]
-                    }}</el-avatar>
-                  <div style="margin: auto 10px; font-size: 0.8rem">
-                    <div style="margin: auto">
-                      {{ targetEmail.from_name }}
-                      <span style="color: var(--el-text-color-secondary)">{{
-          targetEmail.send_at
-        }}</span>
-                    </div>
-                    <div style="margin: 5px auto">
-                      <span style="color: var(--el-text-color-secondary)">发送给：&nbsp;</span>
-                      {{ targetEmail.to_name }}
-                    </div>
-                  </div>
+                <div style="margin: 5px auto">
+                  <span style="color: var(--el-text-color-secondary)">发送给：&nbsp;</span>
+                  {{ targetEmail.to_name }}
                 </div>
               </div>
-              <div style="
+            </div>
+          </div>
+          <div style="
                   border-bottom: 1px solid var(--el-border-color);
                   border-top: 1px solid var(--el-border-color);
                   margin: 20px auto;
@@ -270,40 +266,38 @@
                   font-size: 14px;
                   font-family: 'SimSun';
                 ">
-                <div v-html="targetEmail.content"></div>
-              </div>
-              <div style="display: flex">
-                <el-button icon="Position" @click="handleSend" v-show="targetEmail.state === '草稿'">发送</el-button>
-                <el-button icon="EditPen" @click="handleEdit" v-show="targetEmail.state === '草稿'">编辑</el-button>
-                <el-button icon="ChatLineRound" @click="handleReply" v-show="(targetEmail.state === '未读' ||
-          targetEmail.state === '已读') &&
-          targetEmail.from_id !== userInfo.user_id
-          ">回复</el-button>
-                <el-button icon="TopRight" @click="handleShare" v-show="(targetEmail.state === '未读' ||
-          targetEmail.state === '已读') &&
-          targetEmail.from_id !== userInfo.user_id
-          ">转发</el-button>
-              </div>
-            </div>
-          </el-main>
-        </el-container>
-      </template>
-    </MenuPage>
-  </div>
+            <div v-html="targetEmail.content"></div>
+          </div>
+          <div style="display: flex">
+            <el-button icon="Position" @click="handleSend" v-show="targetEmail.state === '草稿'">发送</el-button>
+            <el-button icon="EditPen" @click="handleEdit" v-show="targetEmail.state === '草稿'">编辑</el-button>
+            <el-button icon="ChatLineRound" @click="handleReply" v-show="(targetEmail.state === '未读' ||
+              targetEmail.state === '已读') &&
+              targetEmail.from_id !== userInfo.user_id
+              ">回复</el-button>
+            <el-button icon="TopRight" @click="handleShare" v-show="(targetEmail.state === '未读' ||
+              targetEmail.state === '已读') &&
+              targetEmail.from_id !== userInfo.user_id
+              ">转发</el-button>
+          </div>
+        </div>
+      </el-main>
+    </el-container>
+  </Layout>
 </template>
 
 <script setup>
 import { ref, reactive, shallowRef, computed, onMounted } from "vue";
 import { useRoute, onBeforeRouteUpdate } from "vue-router";
 import { ElMessage } from "element-plus";
-import MenuPage from "../components/MenuPage.vue";
-import Writing from "../components/Writing.vue";
+import Layout from "@/layout/index.vue";
+import Writing from "@/components/Writing.vue";
 // 邮箱管理
-import { emailMenuItem } from "../data/itemList";
-import { useStore } from "../store/index";
-import { getUserEmail, setSelectedEmail } from "../api/email";
-import { deleteData } from "../api/table";
-import { formatTime } from "../utils/formatTime";
+import { emailMenuItem } from "@/data/itemList";
+import { useStore } from "@/store/index";
+import { getUserEmail, setSelectedEmail } from "@/api/email";
+import { deleteData } from "@/api/table";
+import { formatTime } from "@/utils/formatTime";
 
 // router
 const route = useRoute();
@@ -523,7 +517,7 @@ const handleCancelSelected = () => { };
 const handleRecoverSelected = () => { };
 </script>
 
-<style>
+<style scoped>
 @media (max-width: 1000px) {
   #emailAside {
     width: 64px !important;

@@ -1,21 +1,24 @@
 <template>
   <div class="LoginContainer">
-    <img id="LoginBackground" class="LoginBackground" src="../assets/Background.jpg" />
+    <img id="LoginBackground" class="LoginBackground" src="@/assets/img/Background.jpg" />
 
     <div id="RegisterForm" class="LoginForm">
       <el-form :model="registerForm" status-icon :rules="registerRuleList" ref="registerFormRef" v-loading="loading">
         <div class="title">注&emsp;册</div>
         <el-form-item prop="username">
-          <el-input clearable input-style="border-bottom: 1px solid var(--el-input-border-color)"
+          <el-input @keyup.enter="handleRegister(registerFormRef)"
+          clearable input-style="border-bottom: 1px solid var(--el-input-border-color)"
             v-model="registerForm.username" placeholder="用户名" prefix-icon="User" size="large"></el-input>
         </el-form-item>
         <el-form-item prop="password">
-          <el-input clearable input-style="border-bottom: 1px solid var(--el-input-border-color)" type="password"
+          <el-input @keyup.enter="handleRegister(registerFormRef)"
+          clearable input-style="border-bottom: 1px solid var(--el-input-border-color)" type="password"
             v-model="registerForm.password" autocomplete="off" placeholder="密码" prefix-icon="Unlock" size="large">
           </el-input>
         </el-form-item>
         <el-form-item prop="checkpassword">
-          <el-input clearable input-style="border-bottom: 1px solid var(--el-input-border-color)" type="password"
+          <el-input @keyup.enter="handleRegister(registerFormRef)"
+          clearable input-style="border-bottom: 1px solid var(--el-input-border-color)" type="password"
             v-model="registerForm.checkpassword" autocomplete="off" placeholder="确认密码" prefix-icon="Unlock"
             size="large">
           </el-input>
@@ -35,17 +38,20 @@
         <div class="title">登&emsp;录</div>
 
         <el-form-item prop="username">
-          <el-input clearable input-style="border-bottom: 1px solid var(--el-input-border-color)"
+          <el-input @keyup.enter="handleLogin(loginFormRef)"
+          clearable input-style="border-bottom: 1px solid var(--el-input-border-color)"
             v-model="loginForm.username" placeholder="用户名" prefix-icon="User" size="large">
           </el-input>
         </el-form-item>
         <el-form-item prop="password">
-          <el-input clearable input-style="border-bottom: 1px solid var(--el-input-border-color)" type="password"
+          <el-input @keyup.enter="handleLogin(loginFormRef)"
+           clearable input-style="border-bottom: 1px solid var(--el-input-border-color)" type="password"
             v-model="loginForm.password" autocomplete="off" placeholder="密码" prefix-icon="Unlock" size="large">
           </el-input>
         </el-form-item>
         <el-form-item prop="verify">
-          <el-input clearable input-style="border-bottom: 1px solid var(--el-input-border-color)"
+          <el-input @keyup.enter="handleLogin(loginFormRef)"
+          clearable input-style="border-bottom: 1px solid var(--el-input-border-color)"
             v-model="loginForm.verify" autocomplete="off" placeholder="验证码" prefix-icon="Unlock" size="large">
             <template #append>
               <SIdentify @verify="handleVerify"></SIdentify>
@@ -64,15 +70,15 @@
 </template>
 
 <script setup>
-import { Login } from "../api/login";
-import { Register } from "../api/register";
+import { Login } from "@/api/login";
+import { Register } from "@/api/register";
 import { ElMessage } from "element-plus";
-import SIdentify from "../components/Sidentify.vue";
-import { formatTime } from "../utils/formatTime";
+import SIdentify from "@/components/Sidentify.vue";
+import { formatTime } from "@/utils/formatTime";
 import { ref, reactive } from "vue";
 import { useRouter } from "vue-router";
-import { useStore } from "../store/index";
-import { setToken } from '../utils/auth'
+import { useStore } from "@/store/index";
+import { setToken } from '@/utils/auth'
 
 // 验证码校验
 let validateVerify = (rule, value, callback) => {

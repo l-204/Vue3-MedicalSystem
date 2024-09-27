@@ -57,7 +57,6 @@ declare module 'vue' {
     ElTimelineItem: typeof import('element-plus/es')['ElTimelineItem']
     ElTooltip: typeof import('element-plus/es')['ElTooltip']
     LineChart: typeof import('./src/components/echart/LineChart.vue')['default']
-    MenuPage: typeof import('./src/components/MenuPage.vue')['default']
     MessageBell: typeof import('./src/components/MessageBell.vue')['default']
     PieChart: typeof import('./src/components/echart/PieChart.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']

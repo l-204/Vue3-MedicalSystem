@@ -1,4 +1,4 @@
-import { request } from '../utils/request'
+import { request } from '@/utils/request'
 
 // 单表查询
 export const getTableData = (tableName:string)=>{

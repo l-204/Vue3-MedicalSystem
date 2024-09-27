@@ -54,7 +54,7 @@ const DoctorData = {
   },
 };
 
-import { getTablesData } from "../../api/table";
+import { getTablesData } from "@/api/table";
 function handleData() {
   const tableNames = ["rooms", "positions"];
   getTablesData(tableNames).then((res: any) => {

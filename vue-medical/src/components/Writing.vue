@@ -36,8 +36,8 @@ import {
   toRefs,
 } from "vue";
 import { Editor, Toolbar } from "@wangeditor/editor-for-vue";
-import { getUserIdList } from "../api/user";
-import { setEmail } from "../api/email";
+import { getUserIdList } from "@/api/user";
+import { setEmail } from "@/api/email";
 import { ElMessage } from "element-plus";
 
 const props = defineProps({ emailForm: Object });

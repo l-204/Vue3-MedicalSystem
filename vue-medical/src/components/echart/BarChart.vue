@@ -9,8 +9,8 @@
 
 <script setup>
 import * as echarts from "echarts";
-import { getColumnData } from "../../api/analysis";
-import { EleResize } from "../../utils/esresize"; // 图表自适应
+import { getColumnData } from "@/api/analysis";
+import { EleResize } from "@/utils/esresize"; // 图表自适应
 
 // 配置柱状图信息
 const renderBarChart = (titleList) => {

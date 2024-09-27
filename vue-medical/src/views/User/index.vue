@@ -1,10 +1,6 @@
 <template>
-  <div>
-    <!-- 调用菜单组件 -->
-    <MenuPage>
-      <template v-slot:default>
-        <!-- 这里是需要显示在 el-main 中的内容 -->
-        <div class="Container" style="padding: 50px">
+  <Layout>
+    <div class="container">
           <div class="UserContent">
             <div class="head">
               <el-button @click="dialogFormVisible = true" icon="Edit">修改信息</el-button>
@@ -82,18 +78,16 @@
             </el-descriptions>
           </div>
         </div>
-      </template>
-    </MenuPage>
-  </div>
+  </Layout>
 </template>
 
 <script setup>
-import MenuPage from "../components/MenuPage.vue";
-import { updateUser, setAvatar } from "../api/user";
-import { uploadAvatar } from "../api/file";
+import Layout from "@/layout/index.vue";
+import { updateUser, setAvatar } from "@/api/user";
+import { uploadAvatar } from "@/api/file";
 import { computed, ref, reactive } from "vue";
-import { useStore } from "../store/index";
-import { formatTime } from "../utils/formatTime";
+import { useStore } from "@/store/index";
+import { formatTime } from "@/utils/formatTime";
 import { ElMessage } from "element-plus";
 
 // store 状态
@@ -225,7 +219,10 @@ const uploadImage = async (form) => {
 };
 </script>
 
-<style>
+<style scoped>
+.container{
+  padding: 50px
+}
 .UserContent .head {
   text-align: right;
   margin-bottom: 30px;

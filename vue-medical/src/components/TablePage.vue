@@ -5,7 +5,8 @@
     </el-button>
 
     <div style="float: right; margin-bottom: 15px">
-      <el-input v-model="searchword" placeholder="请输入关键字查询" size="large" class="input-with-select">
+      <el-input @keyup.enter="handleSearch"
+       v-model="searchword" placeholder="请输入关键字查询" size="large" class="input-with-select">
         <template #prepend>
           <el-select v-model="keywords" placeholder="请选择" size="large" style="width: 120px">
             <el-option v-for="(item, index) in formList" :key="index" :label="item.label" :value="item.key"></el-option>
@@ -81,182 +82,142 @@
 
     <el-pagination style="margin: 20px 0" @size-change="handleSizeChange" @current-change="handleCurrentChange"
       :current-page="currentPage" :page-sizes="[10, 20, 40, 50, 100]" :page-size="pageSize" :layout="isMobile ? 'pager' : '->,total, sizes, prev, pager, next, jumper'
-      " :total="total">
+        " :total="total">
     </el-pagination>
   </div>
 </template>
 
-<script>
-import { useStore } from "../store/index";
-import { ref, reactive, computed } from "vue";
-import Writing from "../components/Writing.vue";
-import { ElMessage, ElMessageBox } from "element-plus";
-import { getTableData, searchData, deleteData, submitData } from "../api/table";
-export default {
-  name: "TablePage",
-  props: {
-    tableName: { type: String, default: "" },
-    title: { type: String, default: "" },
-    formList: { type: Array, default: () => [] },
-    ruleList: { type: Object, default: () => { } },
-  },
-  setup(props) {
-    const store = useStore();
-    const isMobile = computed(() => store.isMobile);
+<script setup>
+import { ref, reactive, computed } from 'vue';
+import { useStore } from '@/store/index';
+import { getTableData, searchData, deleteData, submitData } from '@/api/table';
+import { ElMessage, ElMessageBox } from 'element-plus';
 
-    // 获取本地存储的用户信息，并将其转为json格式
-    const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+const props = defineProps({
+  tableName: { type: String, default: '' },
+  title: { type: String, default: '' },
+  formList: { type: Array, default: () => [] },
+  ruleList: { type: Object, default: () => ({}) },
+});
 
-    const identity = ref(userInfo.identity);
+// 获取本地存储的用户信息，并将其转为json格式
+const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+const store = useStore();
+const isMobile = computed(() => store.isMobile);
+const identity = ref(userInfo.identity);
 
-    const keywords = ref("");
-    const searchword = ref("");
-    const tableList = ref([]);
-    const value = ref("");
-    const currentPage = ref(1); // 当前页数
-    const pageSize = ref(10); // 每页显示条目数
-    const total = ref(100); // 总条目数，需要从后端获取
-    const isAdd = ref(false);
-    const isEdit = ref(false);
-    const dialogFormVisible = ref(false);
-    const form = reactive({});
-    const formRef = ref();
+const keywords = ref('');
+const searchword = ref('');
+const tableList = ref([]);
+const value = ref('');
+const currentPage = ref(1); // 当前页数
+const pageSize = ref(10); // 每页显示条目数
+const total = ref(100); // 总条目数，需要从后端获取
+const isAdd = ref(false);
+const isEdit = ref(false);
+const dialogFormVisible = ref(false);
+const form = reactive({});
+const formRef = ref();
 
-    const displayedData = computed(() => {
-      // 根据currentPage和pageSize计算出当前页显示的数据
-      const startIndex = (currentPage.value - 1) * pageSize.value;
-      const endIndex = startIndex + pageSize.value;
-      return tableList.value.slice(startIndex, endIndex);
-    });
+const displayedData = computed(() => {
+  // 根据currentPage和pageSize计算出当前页显示的数据
+  const startIndex = (currentPage.value - 1) * pageSize.value;
+  const endIndex = startIndex + pageSize.value;
+  return tableList.value.slice(startIndex, endIndex);
+});
 
-    getTableData(props.tableName).then((res) => {
-      tableList.value = res;
-      total.value = res.length;
-    });
+getTableData(props.tableName).then((res) => {
+  tableList.value = res;
+  total.value = res.length;
+});
 
-    const handleSizeChange = (val) => {
-      pageSize.value = val;
-      currentPage.value = 1; // 选择每页显示条目数后，重置当前页数为1
-    };
-    const handleCurrentChange = (val) => {
-      currentPage.value = val;
-    };
-    const handleSearch = () => {
-      if (!keywords.value) return ElMessage.error("请选择搜索关键词");
+const handleSizeChange = (val) => {
+  pageSize.value = val;
+  currentPage.value = 1; // 选择每页显示条目数后，重置当前页数为1
+};
 
-      const searchForm = [props.tableName, keywords.value, searchword.value];
-      searchData(searchForm).then((res) => {
+const handleCurrentChange = (val) => {
+  currentPage.value = val;
+};
+
+const handleSearch = () => {
+  if (!keywords.value) return ElMessage.error('请选择搜索关键词');
+
+  const searchForm = [props.tableName, keywords.value, searchword.value];
+  searchData(searchForm).then((res) => {
+    tableList.value = res;
+    total.value = res.length;
+  });
+};
+
+const handleDelete = (row) => {
+  ElMessageBox.confirm(`确定删除该${props.title}吗?`, '提示', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning',
+  })
+    .then(() => {
+      deleteData(row.id, props.tableName).then((res) => {
         tableList.value = res;
         total.value = res.length;
-      });
-    };
-
-    const handleDelete = (row) => {
-      ElMessageBox.confirm(`确定删除该${props.title}吗?`, "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning",
-      })
-        .then(() => {
-          deleteData(row.id, props.tableName).then((res) => {
-            tableList.value = res;
-            total.value = res.length;
-            // 删除数据为当前页最后一条时，删除后将返回上一页
-            total.value % pageSize.value == 0
-              ? (currentPage.value -= 1)
-              : currentPage.value;
-            // 弹出信息
-            ElMessage.success("删除成功");
-          });
-        })
-        .catch(() => ElMessage.info("已取消删除"));
-    };
-
-    const openAddDialog = () => {
-      // 使用forEach遍历formList数组，并将每个对象的key属性作为form对象的属性，并设置默认值为空字符串
-      props.formList.forEach((item) => {
-        form[item.key] = ""; // 假设默认值为空字符串
-      });
-
-      isAdd.value = true;
-      isEdit.value = false;
-      dialogFormVisible.value = true;
-    };
-
-    const openEditDialog = (row) => {
-      /**
-       * 使用深拷贝避免表单和表格数据引用同一内存地址
-       * 否则会导致表单数据被修改时，表格数据也会被修改
-       *  */
-      Object.assign(form, row);
-      isAdd.value = false;
-      isEdit.value = true;
-      dialogFormVisible.value = true;
-    };
-
-    const submitForm = () => {
-      // 符合校验规则则关闭弹窗
-      dialogFormVisible.value = false;
-      // 保存修改信息并发送请求
-      const url = isAdd.value
-        ? "insert"
-        : isEdit.value
-          ? `update/${form.id}`
-          : "";
-      submitData(url, props.tableName, form).then((res) => {
-        tableList.value = res;
-        total.value = res.length;
+        // 删除数据为当前页最后一条时，删除后将返回上一页
+        if (total.value % pageSize.value === 0) {
+          currentPage.value -= 1;
+        }
         // 弹出信息
-        ElMessage.success(isAdd.value ? "添加成功" : "修改成功");
+        ElMessage.success('删除成功');
       });
-    };
+    })
+    .catch(() => ElMessage.info('已取消删除'));
+};
 
-    const handleReset = (formRef) => {
-      if (!formRef) return;
-      formRef.resetFields();
-    };
+const openAddDialog = () => {
+  // 使用forEach遍历formList数组，并将每个对象的key属性作为form对象的属性，并设置默认值为空字符串
+  props.formList.forEach((item) => {
+    form[item.key] = ''; // 假设默认值为空字符串
+  });
 
-    const handleSubmit = async () => {
-      // 规则校验
-      const results = await formRef.value.validate();
-      if (results) {
-        submitForm();
-        ElMessage.success("提交成功");
-      } else return ElMessage.error("提交失败");
-    };
+  isAdd.value = true;
+  isEdit.value = false;
+  dialogFormVisible.value = true;
+};
 
-    return {
-      isMobile,
+const openEditDialog = (row) => {
+  // 使用深拷贝避免表单和表格数据引用同一内存地址
+  // 否则会导致表单数据被修改时，表格数据也会被修改
+  Object.assign(form, row);
+  isAdd.value = false;
+  isEdit.value = true;
+  dialogFormVisible.value = true;
+};
 
-      identity,
+const submitForm = () => {
+  // 符合校验规则则关闭弹窗
+  dialogFormVisible.value = false;
+  // 保存修改信息并发送请求
+  const url = isAdd.value ? 'insert' : isEdit.value ? `update/${form.id}` : '';
+  submitData(url, props.tableName, form).then((res) => {
+    tableList.value = res;
+    total.value = res.length;
+    // 弹出信息
+    ElMessage.success(isAdd.value ? '添加成功' : '修改成功');
+  });
+};
 
-      keywords,
-      searchword,
+const handleReset = (formRef) => {
+  if (!formRef) return;
+  formRef.resetFields();
+};
 
-      tableList,
-
-      value,
-      currentPage,
-      pageSize,
-      total,
-
-      isAdd,
-      isEdit,
-      dialogFormVisible,
-      form,
-      formRef,
-      displayedData,
-      handleSizeChange,
-      handleCurrentChange,
-      handleSearch,
-      handleDelete,
-      openAddDialog,
-      openEditDialog,
-      submitForm,
-      handleReset,
-      handleSubmit,
-    };
-  },
+const handleSubmit = async () => {
+  // 规则校验
+  const results = await formRef.value.validate();
+  if (results) {
+    submitForm();
+    ElMessage.success('提交成功');
+  } else {
+    ElMessage.error('提交失败');
+  }
 };
 </script>
 

@@ -1,18 +1,6 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
-// 最外层页
-import Login from '../views/LoginPage.vue';
-import Home from '../views/HomePage.vue';
-import User from '../views/UserPage.vue';
-import Information from '../views/InformationPage.vue';
-import Email from '../views/EmailPage.vue'
-import Analysis from '../views/AnalysisPage.vue';
-import Map from "../views/MapPage.vue";
-import Setting from '../views/SettingPage.vue';
-import TestPage from "../views/TestPage.vue";
-import NotFound from '../views/NotFound.vue';
-
 import { jwtDecode } from 'jwt-decode';
-import { getToken, removeToken } from '../utils/auth';
+import { getToken, removeToken } from '@/utils/auth';
 
 const routes: Array<RouteRecordRaw> = [
     // 默认跳转至首页
@@ -23,7 +11,7 @@ const routes: Array<RouteRecordRaw> = [
     {
         path: '/home',
         name: 'Home',
-        component: Home,
+        component: () => import('@/views/Home/index.vue'),
         meta: {
             breadcrumb: '首页'
         },
@@ -31,12 +19,12 @@ const routes: Array<RouteRecordRaw> = [
     {
         path: '/login',
         name: 'Login',
-        component: Login,
+        component: () => import('@/views/Login/index.vue'),
     },
     {
         path: '/user',
         name: 'User',
-        component: User,
+        component: () => import('@/views/User/index.vue'),
         meta: {
             breadcrumb: '个人中心'
         },
@@ -45,7 +33,7 @@ const routes: Array<RouteRecordRaw> = [
     {
         path: '/information',
         name: 'Information',
-        component: Information,
+        component: () => import('@/views/Information/index.vue'),
         meta: {
             breadcrumb: '信息管理'
         },
@@ -54,7 +42,7 @@ const routes: Array<RouteRecordRaw> = [
     {
         path: '/email',
         name: 'Email',
-        component: Email,
+        component: () => import('@/views/Email/index.vue'),
         meta: {
             breadcrumb: '邮件管理'
         },
@@ -63,7 +51,7 @@ const routes: Array<RouteRecordRaw> = [
     {
         path: '/analysis',
         name: 'Analysis',
-        component: Analysis,
+        component: () => import('@/views/Analysis/index.vue'),
         meta: {
             breadcrumb: '统计分析'
         },
@@ -72,7 +60,7 @@ const routes: Array<RouteRecordRaw> = [
     {
         path: '/map',
         name: 'Map',
-        component: Map,
+        component: () => import('@/views/Map/index.vue'),
         meta: {
             breadcrumb: '院内导航'
         },
@@ -81,7 +69,7 @@ const routes: Array<RouteRecordRaw> = [
     {
         path: '/setting',
         name: 'Setting',
-        component: Setting,
+        component: () => import('@/views/Setting/index.vue'),
         meta: {
             breadcrumb: '系统设置'
         },
@@ -90,7 +78,7 @@ const routes: Array<RouteRecordRaw> = [
     {
         path: '/test',
         name: 'test',
-        component: TestPage,
+        component: () => import('@/views/Test/index.vue'),
         meta: {
             breadcrumb: '测试模块'
         },
@@ -99,7 +87,7 @@ const routes: Array<RouteRecordRaw> = [
     {
         path: '/404',
         name: 'NotFound',
-        component: NotFound
+        component: () => import('@/views/Error/index.vue'),
       },
       {
         path: "/:catchAll(.*)", // 不识别的path自动匹配404

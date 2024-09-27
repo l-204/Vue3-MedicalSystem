@@ -9,8 +9,8 @@
 
 <script setup>
 import * as echarts from "echarts";
-import { getTableData } from "../../api/table";
-import { EleResize } from "../../utils/esresize"; // 图表自适应
+import { getTableData } from "@/api/table";
+import { EleResize } from "@/utils/esresize"; // 图表自适应
 
 const renderLineChart = (result) => {
   // 获取键数组

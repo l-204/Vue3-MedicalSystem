@@ -1,4 +1,4 @@
-import { request } from '../utils/request'//导入request
+import { request } from '@/utils/request'//导入request
 
 export function updateUser(listData: any) {
     return request({
